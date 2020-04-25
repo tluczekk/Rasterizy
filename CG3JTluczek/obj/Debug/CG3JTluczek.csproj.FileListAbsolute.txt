@@ -1,0 +1,10 @@
+D:\VISUAL\PROJEKTY\CG3JTluczek\CG3JTluczek\bin\Debug\CG3JTluczek.exe.config
+D:\VISUAL\PROJEKTY\CG3JTluczek\CG3JTluczek\bin\Debug\CG3JTluczek.exe
+D:\VISUAL\PROJEKTY\CG3JTluczek\CG3JTluczek\bin\Debug\CG3JTluczek.pdb
+D:\VISUAL\PROJEKTY\CG3JTluczek\CG3JTluczek\obj\Debug\CG3JTluczek.csprojAssemblyReference.cache
+D:\VISUAL\PROJEKTY\CG3JTluczek\CG3JTluczek\obj\Debug\CG3JTluczek.Form1.resources
+D:\VISUAL\PROJEKTY\CG3JTluczek\CG3JTluczek\obj\Debug\CG3JTluczek.Properties.Resources.resources
+D:\VISUAL\PROJEKTY\CG3JTluczek\CG3JTluczek\obj\Debug\CG3JTluczek.csproj.GenerateResource.cache
+D:\VISUAL\PROJEKTY\CG3JTluczek\CG3JTluczek\obj\Debug\CG3JTluczek.csproj.CoreCompileInputs.cache
+D:\VISUAL\PROJEKTY\CG3JTluczek\CG3JTluczek\obj\Debug\CG3JTluczek.exe
+D:\VISUAL\PROJEKTY\CG3JTluczek\CG3JTluczek\obj\Debug\CG3JTluczek.pdb
