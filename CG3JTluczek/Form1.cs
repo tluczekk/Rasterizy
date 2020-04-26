@@ -13,23 +13,28 @@ namespace CG3JTluczek
 {
     public partial class Form1 : Form
     {
-        // TODO:
-        // - Xiaolin Wu antialiasing algorithm
-        // - serialization
-        // - moving vertices of polygons
+        // Whole logic of the program is contained in Mouse_Down method
+        // while logic of drawing in redraw()
         public Form1()
         {
             InitializeComponent();
             backup = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             Dictionary<string, string> lineDict = new Dictionary<string, string>();
+            Dictionary<string, string> polyDict = new Dictionary<string, string>();
             lineDict.Add("1", "Draw");
             lineDict.Add("2", "Move");
             lineDict.Add("3", "Delete");
             lineDict.Add("4", "Thicken");
             lineDict.Add("5", "Recolor");
+            polyDict.Add("1", "Draw");
+            polyDict.Add("2", "Move");
+            polyDict.Add("3", "Delete");
+            polyDict.Add("4", "Thicken");
+            polyDict.Add("5", "Recolor");
+            polyDict.Add("6", "Move vertex");
             comboLine.DataSource = new BindingSource(lineDict, null);
             comboCircle.DataSource = new BindingSource(lineDict, null);
-            comboPoly.DataSource = new BindingSource(lineDict, null);
+            comboPoly.DataSource = new BindingSource(polyDict, null);
             comboLine.DisplayMember = "Value";
             comboLine.ValueMember = "Key";
             comboCircle.DisplayMember = "Value";
@@ -39,6 +44,7 @@ namespace CG3JTluczek
             panel1.BackColor = Tweakable.col;
         }
 
+        // Global triggers and variables
         private bool isLineMode = false;
         private bool isCircleMode = false;
         private bool isPolygonMode = false;
@@ -58,6 +64,7 @@ namespace CG3JTluczek
         private Line lineToMove;
         private Circle circleToMove;
         private Polygon polyToMove;
+        private Point vertexToMove;
         private Point anchorPoint;
         private bool isAliasing = false;
 
@@ -136,43 +143,69 @@ namespace CG3JTluczek
                 else if (((KeyValuePair<string, string>)comboLine.SelectedItem).Value == "Delete")
                 {
                     Point pointToDelete = new Point(e.X, e.Y);
+                    bool isDone = false;
                     foreach (Line l in lines)
                     {
-                        if (l.DDA().Contains(pointToDelete))
+                        foreach (Point p in l.DDA())
                         {
-                            lines.Remove(l);
-                            redraw();
-                            break;
+                            var dist = Math.Sqrt(Math.Pow(pointToDelete.X - p.X, 2)
+                                            + Math.Pow(pointToDelete.Y - p.Y, 2));
+                            if (dist < 3)
+                            {
+                                lines.Remove(l);
+                                isDone = true;
+                                redraw();
+                                break;
+                            }
                         }
+                        if (isDone) { break; }
                     }
                 }
                 else if (((KeyValuePair<string, string>)comboLine.SelectedItem).Value == "Thicken")
                 {
                     Point pointToThicken = new Point(e.X, e.Y);
+                    bool isDone = false;
                     foreach (Line l in lines)
                     {
-                        if (l.DDA().Contains(pointToThicken))
+                        foreach (Point p in l.DDA())
                         {
-                            l.thickness = Tweakable.thicc;
-                            redraw();
-                            break;
+                            var dist = Math.Sqrt(Math.Pow(pointToThicken.X - p.X, 2)
+                                            + Math.Pow(pointToThicken.Y - p.Y, 2));
+                            if (dist < 3)
+                            {
+                                l.thickness = Tweakable.thicc;
+                                isDone = true;
+                                redraw();
+                                break;
+                            }
+                            if (isDone) { break; }
                         }
+
                     }
                 }
                 else if (((KeyValuePair<string, string>)comboLine.SelectedItem).Value == "Recolor")
                 {
                     Point pointToRecolor = new Point(e.X, e.Y);
+                    bool isDone = false;
                     foreach (Line l in lines)
                     {
-                        if (l.DDA().Contains(pointToRecolor))
+                        foreach (Point p in l.DDA())
                         {
-                            l.linCol = Tweakable.col;
-                            redraw();
-                            break;
+                            var dist = Math.Sqrt(Math.Pow(pointToRecolor.X - p.X, 2)
+                                            + Math.Pow(pointToRecolor.Y - p.Y, 2));
+                            if (dist < 3)
+                            {
+                                l.linCol = Tweakable.col;
+                                isDone = true;
+                                redraw();
+                                break;
+                            }
                         }
+                        if (isDone) { break; }
                     }
                 }
-            } else if (isCircleMode)
+            }
+            else if (isCircleMode)
             {
                 if (((KeyValuePair<string, string>)comboCircle.SelectedItem).Value == "Draw")
                 {
@@ -204,7 +237,7 @@ namespace CG3JTluczek
                     {
                         foreach (Circle c in circles)
                         {
-                            foreach(Point p in c.MidPointCircle(c.radius))
+                            foreach (Point p in c.MidPointCircle(c.radius))
                             {
                                 var dist = Math.Sqrt(Math.Pow(pointToMove.X - p.X, 2)
                                             + Math.Pow(pointToMove.Y - p.Y, 2));
@@ -231,47 +264,71 @@ namespace CG3JTluczek
                 else if (((KeyValuePair<string, string>)comboCircle.SelectedItem).Value == "Delete")
                 {
                     Point pointToDelete = new Point(e.X, e.Y);
+                    bool isDone = false;
                     foreach (Circle c in circles)
                     {
-                        if (c.MidPointCircle(c.radius).Contains(pointToDelete))
+                        foreach (Point p in c.MidPointCircle(c.radius))
                         {
-                            circles.Remove(c);
-                            redraw();
-                            break;
+                            var dist = Math.Sqrt(Math.Pow(pointToDelete.X - p.X, 2)
+                                                + Math.Pow(pointToDelete.Y - p.Y, 2));
+                            if (dist < 3)
+                            {
+                                circles.Remove(c);
+                                isDone = true;
+                                redraw();
+                                break;
+                            }
                         }
+                        if (isDone) { break; }
                     }
                 }
                 else if (((KeyValuePair<string, string>)comboCircle.SelectedItem).Value == "Thicken")
                 {
                     Point pointToThicken = new Point(e.X, e.Y);
+                    bool isDone = false;
                     foreach (Circle c in circles)
                     {
-                        if (c.MidPointCircle(c.radius).Contains(pointToThicken))
+                        foreach (Point p in c.MidPointCircle(c.radius))
                         {
-                            c.thickness = Tweakable.thicc;
-                            redraw();
-                            break;
+                            var dist = Math.Sqrt(Math.Pow(pointToThicken.X - p.X, 2)
+                                                + Math.Pow(pointToThicken.Y - p.Y, 2));
+                            if (dist < 3)
+                            {
+                                c.thickness = Tweakable.thicc;
+                                isDone = true;
+                                redraw();
+                                break;
+                            }
                         }
+                        if (isDone) { break; }
                     }
                 }
                 else if (((KeyValuePair<string, string>)comboCircle.SelectedItem).Value == "Recolor")
                 {
                     Point pointToRecolor = new Point(e.X, e.Y);
+                    bool isDone = false;
                     foreach (Circle c in circles)
                     {
-                        if (c.MidPointCircle(c.radius).Contains(pointToRecolor))
+                        foreach (Point p in c.MidPointCircle(c.radius))
                         {
-                            c.circleCol = Tweakable.col;
-                            redraw();
-                            break;
+                            var dist = Math.Sqrt(Math.Pow(pointToRecolor.X - p.X, 2)
+                                                + Math.Pow(pointToRecolor.Y - p.Y, 2));
+                            if (dist < 3)
+                            {
+                                c.circleCol = Tweakable.col;
+                                isDone = true;
+                                redraw();
+                                break;
+                            }
                         }
+                        if (isDone) { break; }
                     }
                 }
             }
             else if (isPolygonMode)
             {
                 if (((KeyValuePair<string, string>)comboPoly.SelectedItem).Value == "Draw")
-                { 
+                {
                     if (!isPolygonOngoing)
                     {
                         tempStartVertex = new Point(e.X, e.Y);
@@ -303,7 +360,7 @@ namespace CG3JTluczek
                             newpoly.polyVertices = new List<Point>(tempPolyVertices);
                             polygons.Add(newpoly);
                             tempPolyVertices.Clear();
-                            
+
                             redraw();
                         }
                         else
@@ -319,7 +376,7 @@ namespace CG3JTluczek
                     {
 
                     }
-                    if(polyCount == 0)
+                    if (polyCount == 0)
                     {
                         polyPair.Add(pointToMove);
                         foreach (Polygon poly in polygons)
@@ -331,7 +388,6 @@ namespace CG3JTluczek
                                 if (dist < 5)
                                 {
                                     polyToMove = poly;
-                                    //circles.Remove(c);
                                     polyCount++;
                                     break;
                                 }
@@ -340,14 +396,14 @@ namespace CG3JTluczek
                         polygons.Remove(polyToMove);
                         polyToMove.vertexLines.Clear();
                     }
-                    else if(polyCount == 1)
+                    else if (polyCount == 1)
                     {
                         Point newPoint = new Point(e.X, e.Y);
                         polyPair.Add(newPoint);
                         int xVecDiff = polyPair[1].X - polyPair[0].X;
                         int yVecDiff = polyPair[1].Y - polyPair[0].Y;
                         List<Point> temp = new List<Point>();
-                        for(int i=0;i< polyToMove.polyVertices.Count;i++)
+                        for (int i = 0; i < polyToMove.polyVertices.Count; i++)
                         {
                             temp.Add(new Point(polyToMove.polyVertices[i].X + xVecDiff,
                                                polyToMove.polyVertices[i].Y + yVecDiff));
@@ -361,19 +417,27 @@ namespace CG3JTluczek
                         polyCount = 0;
                         redraw();
                     }
-                    
+
                 }
                 else if (((KeyValuePair<string, string>)comboPoly.SelectedItem).Value == "Delete")
                 {
                     Point pointToDelete = new Point(e.X, e.Y);
+                    bool isFound = false;
                     foreach (Polygon poly in polygons)
                     {
-                        if (poly.allPoints().Contains(pointToDelete))
+                        foreach (Point p in poly.allPoints())
                         {
-                            polygons.Remove(poly);
-                            redraw();
-                            break;
+                            var dist = Math.Sqrt(Math.Pow(pointToDelete.X - p.X, 2)
+                                                + Math.Pow(pointToDelete.Y - p.Y, 2));
+                            if (dist < 3)
+                            {
+                                polygons.Remove(poly);
+                                redraw();
+                                isFound = true;
+                                break;
+                            }
                         }
+                        if (isFound) { break; }
                     }
                 }
                 else if (((KeyValuePair<string, string>)comboPoly.SelectedItem).Value == "Thicken")
@@ -381,15 +445,21 @@ namespace CG3JTluczek
                     Point pointToThicken = new Point(e.X, e.Y);
                     foreach (Polygon poly in polygons)
                     {
-                        if (poly.allPoints().Contains(pointToThicken))
+                        foreach (Point p in poly.allPoints())
                         {
-                            foreach (Line l in poly.vertexLines)
+                            var dist = Math.Sqrt(Math.Pow(pointToThicken.X - p.X, 2)
+                                                + Math.Pow(pointToThicken.Y - p.Y, 2));
+                            if (dist < 3)
                             {
-                                l.thickness = Tweakable.thicc;
+                                foreach (Line l in poly.vertexLines)
+                                {
+                                    l.thickness = Tweakable.thicc;
+                                }
+                                redraw();
+                                break;
                             }
-                            redraw();
-                            break;
                         }
+
                     }
                 }
                 else if (((KeyValuePair<string, string>)comboPoly.SelectedItem).Value == "Recolor")
@@ -397,15 +467,60 @@ namespace CG3JTluczek
                     Point pointToRecolor = new Point(e.X, e.Y);
                     foreach (Polygon poly in polygons)
                     {
-                        if (poly.allPoints().Contains(pointToRecolor))
+                        foreach (Point v in poly.allPoints())
                         {
-                            poly.polyColor = Tweakable.col;
-                            redraw();
-                            break;
+                            var dist = Math.Sqrt(Math.Pow(pointToRecolor.X - v.X, 2)
+                                                + Math.Pow(pointToRecolor.Y - v.Y, 2));
+                            if (dist < 3)
+                            {
+                                poly.polyColor = Tweakable.col;
+                                redraw();
+                                break;
+                            }
                         }
                     }
                 }
-            }
+                else if (((KeyValuePair<string, string>)comboPoly.SelectedItem).Value == "Move vertex")
+                {
+                    if (polyCount == 0)
+                    {
+                        Point pointToRevertex = new Point(e.X, e.Y);
+                        foreach (Polygon poly in polygons)
+                        {
+                            foreach (Point v in poly.polyVertices)
+                            {
+                                var dist = Math.Sqrt(Math.Pow(pointToRevertex.X - v.X, 2)
+                                                + Math.Pow(pointToRevertex.Y - v.Y, 2));
+                                if (dist < 5)
+                                {
+                                    polyToMove = poly;
+                                    vertexToMove = v;
+                                    polyCount++;
+                                    polyToMove.vertexLines.Clear();
+                                    break;
+                                }
+                            }
+                        }
+                        polygons.Remove(polyToMove);
+
+                    }
+                    else if (polyCount == 1)
+                    {
+                        Point newVertex = new Point(e.X, e.Y);
+                        int index = polyToMove.polyVertices.FindIndex(x => x == vertexToMove);
+                        polyToMove.polyVertices[index] = newVertex;
+                        if (vertexToMove == polyToMove.startVertex)
+                        {
+                            polyToMove.polyVertices[0] = newVertex;
+                            polyToMove.polyVertices[polyToMove.polyVertices.Count - 1] = newVertex;
+                        }
+                        polygons.Add(polyToMove);
+                        polyToMove = null;
+                        polyCount = 0;
+                        redraw();
+                    }
+                }
+            }      
         }
 
         public void redraw()
@@ -424,7 +539,79 @@ namespace CG3JTluczek
             {
                 if (isAliasing)
                 {
-                    // XIAOMI CODE HERE
+                    // http://rosettacode.org/wiki/Xiaolin_Wu%27s_line_algorithm#C.23
+                    Point tempStart = l.start;
+                    Point tempEnd = l.end;
+                    bool steep = Math.Abs(tempEnd.Y - tempStart.Y) > Math.Abs(tempEnd.X - tempStart.X);
+                    int temp;
+                    if (steep)
+                    {
+                        temp = tempStart.X; tempStart.X = tempStart.Y; tempStart.Y = temp;
+                        temp = tempEnd.X; tempEnd.X = tempEnd.Y; tempEnd.Y = temp;
+                    }
+                    if (tempStart.X > tempEnd.X)
+                    {
+                        temp = tempStart.X; tempStart.X = tempEnd.X; tempEnd.X = temp;
+                        temp = tempStart.Y; tempStart.Y = tempEnd.Y; tempEnd.Y = temp;
+                    }
+
+                    double dx = tempEnd.X - tempStart.X;
+                    double dy = tempEnd.Y - tempStart.Y;
+                    double gradient = dy / dx;
+
+                    double xEnd = round(tempStart.X);
+                    double yEnd = tempStart.Y + gradient * (xEnd - tempStart.X);
+                    double xGap = rfpart(tempStart.X + 0.5);
+                    double xPixel1 = xEnd;
+                    double yPixel1 = ipart(yEnd);
+
+                    if (steep)
+                    {
+                        plot(tempBit, yPixel1, xPixel1, rfpart(yEnd) * xGap);
+                        plot(tempBit, yPixel1 + 1, xPixel1, fpart(yEnd) * xGap);
+                    }
+                    else
+                    {
+                        plot(tempBit, xPixel1, yPixel1, rfpart(yEnd) * xGap);
+                        plot(tempBit, xPixel1, yPixel1 + 1, fpart(yEnd) * xGap);
+                    }
+                    double intery = yEnd + gradient;
+
+                    xEnd = round(tempEnd.X);
+                    yEnd = tempEnd.Y + gradient * (xEnd - tempEnd.X);
+                    xGap = fpart(tempEnd.X + 0.5);
+                    double xPixel2 = xEnd;
+                    double yPixel2 = ipart(yEnd);
+                    if (steep)
+                    {
+                        plot(tempBit, yPixel2, xPixel2, rfpart(yEnd) * xGap);
+                        plot(tempBit, yPixel2 + 1, xPixel2, fpart(yEnd) * xGap);
+                    }
+                    else
+                    {
+                        plot(tempBit, xPixel2, yPixel2, rfpart(yEnd) * xGap);
+                        plot(tempBit, xPixel2, yPixel2 + 1, fpart(yEnd) * xGap);
+                    }
+
+                    if (steep)
+                    {
+                        for (int x = (int)(xPixel1 + 1); x <= xPixel2 - 1; x++)
+                        {
+                            plot(tempBit, ipart(intery), x, rfpart(intery));
+                            plot(tempBit, ipart(intery) + 1, x, fpart(intery));
+                            intery += gradient;
+                        }
+                    }
+                    else
+                    {
+                        for (int x = (int)(xPixel1 + 1); x <= xPixel2 - 1; x++)
+                        {
+                            plot(tempBit, x, ipart(intery), rfpart(intery));
+                            plot(tempBit, x, ipart(intery) + 1, fpart(intery));
+                            intery += gradient;
+                        }
+                    }
+
                 }
                 else
                 {
@@ -462,7 +649,186 @@ namespace CG3JTluczek
             {
                 if (isAliasing)
                 {
-                    // XIAOLIN CODE HERE
+                    // https://yellowsplash.wordpress.com/2009/10/23/fast-antialiased-circles-and-ellipses-from-xiaolin-wus-concepts/
+                    int Lr = c.circleCol.R;
+                    int Lg = c.circleCol.G;
+                    int Lb = c.circleCol.B;
+                    int Br = 255;
+                    int Bg = 255;
+                    int Bb = 255;
+                    int x = c.radius;
+                    int y = 0;
+
+                    Bitmap circleBit = new Bitmap(tempBit);
+
+                    try
+                    {
+                        tempBit.SetPixel(c.center.X + c.radius, c.center.Y + c.radius, c.circleCol);
+                    }
+                    catch (ArgumentOutOfRangeException e) { }
+                    
+                    try
+                    {
+                        tempBit.SetPixel(c.center.X + c.radius, c.center.Y - c.radius, c.circleCol);
+                    }
+                    catch (ArgumentOutOfRangeException e) { }
+                    
+                    try
+                    {
+                        tempBit.SetPixel(c.center.X - c.radius, c.center.Y + c.radius, c.circleCol);
+                    }
+                    catch (ArgumentOutOfRangeException e) { }
+                    
+                    try
+                    {
+                        tempBit.SetPixel(c.center.X - c.radius, c.center.Y - c.radius, c.circleCol);
+                    }
+                    catch (ArgumentOutOfRangeException e) { }
+
+                    
+                    try
+                    {
+                        tempBit.SetPixel(c.center.X + c.radius, c.center.Y, c.circleCol);
+                    }
+                    catch (ArgumentOutOfRangeException e) { }
+                    
+                    try
+                    {
+                        tempBit.SetPixel(c.center.X, c.center.Y + c.radius, c.circleCol);
+                    }
+                    catch (ArgumentOutOfRangeException e) { }
+
+                    
+                    try
+                    {
+                        tempBit.SetPixel(c.center.X - c.radius, c.center.Y, c.circleCol);
+                    }
+                    catch (ArgumentOutOfRangeException e) { }
+                    
+                    try
+                    {
+                        tempBit.SetPixel(c.center.X, c.center.Y - c.radius, c.circleCol);
+                    }
+                    catch (ArgumentOutOfRangeException e) { }
+
+                    while (x >= y)
+                    {
+                        ++y;
+
+                        x = (int)Math.Ceiling(Math.Sqrt(c.radius * c.radius - y * y));
+                        double T = D(c.radius, y);
+                        int c2r = (int)(Lr * (1 - T) + Br * T);
+                        int c1r = (int)(Lr * T + Br * (1 - T));
+                        int c2g = (int)(Lg * (1 - T) + Bg * T);
+                        int c1g = (int)(Lg * T + Bg * (1 - T));
+                        int c2b = (int)(Lb * (1 - T) + Bb * T);
+                        int c1b = (int)(Lb * T + Bb * (1 - T));
+
+
+                        try
+                        {
+                            tempBit.SetPixel(c.center.X + x, c.center.Y + y, Color.FromArgb(c2r, c2g, c2b));
+                        }
+                        catch (ArgumentOutOfRangeException e) { }
+                        
+                        try
+                        {
+                            tempBit.SetPixel(c.center.X + x - 1, c.center.Y + y, Color.FromArgb(c1r, c1g, c1b));
+                        }
+                        catch (ArgumentOutOfRangeException e) { }
+
+                        
+                        try
+                        {
+                            tempBit.SetPixel(c.center.X + y, c.center.Y + x, Color.FromArgb(c2r, c2g, c2b));
+                        }
+                        catch (ArgumentOutOfRangeException e) { }
+                        
+                        try
+                        {
+                            tempBit.SetPixel(c.center.X + y, c.center.Y + x - 1, Color.FromArgb(c1r, c1g, c1b));
+                        }
+                        catch (ArgumentOutOfRangeException e) { }
+
+                        
+                        try
+                        {
+                            tempBit.SetPixel(c.center.X - x, c.center.Y - y, Color.FromArgb(c2r, c2g, c2b));
+                        }
+                        catch (ArgumentOutOfRangeException e) { }
+                        
+                        try
+                        {
+                            tempBit.SetPixel(c.center.X - x + 1, c.center.Y - y, Color.FromArgb(c1r, c1g, c1b));
+                        }
+                        catch (ArgumentOutOfRangeException e) { }
+
+                        
+                        try
+                        {
+                            tempBit.SetPixel(c.center.X - y, c.center.Y - x, Color.FromArgb(c2r, c2g, c2b));
+                        }
+                        catch (ArgumentOutOfRangeException e) { }
+                        
+                        try
+                        {
+                            tempBit.SetPixel(c.center.X - y, c.center.Y - x + 1, Color.FromArgb(c1r, c1g, c1b));
+                        }
+                        catch (ArgumentOutOfRangeException e) { }
+
+                        
+                        try
+                        {
+                            tempBit.SetPixel(c.center.X + x, c.center.Y - y, Color.FromArgb(c2r, c2g, c2b));
+                        }
+                        catch (ArgumentOutOfRangeException e) { }
+                        
+                        try
+                        {
+                            tempBit.SetPixel(c.center.X + x - 1, c.center.Y - y, Color.FromArgb(c1r, c1g, c1b));
+                        }
+                        catch (ArgumentOutOfRangeException e) { }
+
+                        
+                        try
+                        {
+                            tempBit.SetPixel(c.center.X + y, c.center.Y - x, Color.FromArgb(c2r, c2g, c2b));
+                        }
+                        catch (ArgumentOutOfRangeException e) { }
+                        
+                        try
+                        {
+                            tempBit.SetPixel(c.center.X + y, c.center.Y - x + 1, Color.FromArgb(c1r, c1g, c1b));
+                        }
+                        catch (ArgumentOutOfRangeException e) { }
+
+                        
+                        try
+                        {
+                            tempBit.SetPixel(c.center.X - x, c.center.Y + y, Color.FromArgb(c2r, c2g, c2b));
+                        }
+                        catch (ArgumentOutOfRangeException e) { }
+                        
+                        try
+                        {
+                            tempBit.SetPixel(c.center.X - x + 1, c.center.Y + y, Color.FromArgb(c1r, c1g, c1b));
+                        }
+                        catch (ArgumentOutOfRangeException e) { }
+
+                        
+                        try
+                        {
+                            tempBit.SetPixel(c.center.X - y, c.center.Y + x, Color.FromArgb(c2r, c2g, c2b));
+                        }
+                        catch (ArgumentOutOfRangeException e) { }
+                        
+                        try
+                        {
+                            tempBit.SetPixel(c.center.X - y, c.center.Y + x - 1, Color.FromArgb(c1r, c1g, c1b));
+                        }
+                        catch (ArgumentOutOfRangeException e) { }
+
+                    }
                 }
                 else
                 {
@@ -514,7 +880,77 @@ namespace CG3JTluczek
                 {
                     if (isAliasing)
                     {
-                        // SHAOLIN CODE HERE
+                        Point tempStart = linPoly.start;
+                        Point tempEnd = linPoly.end;
+                        bool steep = Math.Abs(tempEnd.Y - tempStart.Y) > Math.Abs(tempEnd.X - tempStart.X);
+                        int temp;
+                        if (steep)
+                        {
+                            temp = tempStart.X; tempStart.X = tempStart.Y; tempStart.Y = temp;
+                            temp = tempEnd.X; tempEnd.X = tempEnd.Y; tempEnd.Y = temp;
+                        }
+                        if (tempStart.X > tempEnd.X)
+                        {
+                            temp = tempStart.X; tempStart.X = tempEnd.X; tempEnd.X = temp;
+                            temp = tempStart.Y; tempStart.Y = tempEnd.Y; tempEnd.Y = temp;
+                        }
+
+                        double dx = tempEnd.X - tempStart.X;
+                        double dy = tempEnd.Y - tempStart.Y;
+                        double gradient = dy / dx;
+
+                        double xEnd = round(tempStart.X);
+                        double yEnd = tempStart.Y + gradient * (xEnd - tempStart.X);
+                        double xGap = rfpart(tempStart.X + 0.5);
+                        double xPixel1 = xEnd;
+                        double yPixel1 = ipart(yEnd);
+
+                        if (steep)
+                        {
+                            plot(tempBit, yPixel1, xPixel1, rfpart(yEnd) * xGap);
+                            plot(tempBit, yPixel1 + 1, xPixel1, fpart(yEnd) * xGap);
+                        }
+                        else
+                        {
+                            plot(tempBit, xPixel1, yPixel1, rfpart(yEnd) * xGap);
+                            plot(tempBit, xPixel1, yPixel1 + 1, fpart(yEnd) * xGap);
+                        }
+                        double intery = yEnd + gradient;
+
+                        xEnd = round(tempEnd.X);
+                        yEnd = tempEnd.Y + gradient * (xEnd - tempEnd.X);
+                        xGap = fpart(tempEnd.X + 0.5);
+                        double xPixel2 = xEnd;
+                        double yPixel2 = ipart(yEnd);
+                        if (steep)
+                        {
+                            plot(tempBit, yPixel2, xPixel2, rfpart(yEnd) * xGap);
+                            plot(tempBit, yPixel2 + 1, xPixel2, fpart(yEnd) * xGap);
+                        }
+                        else
+                        {
+                            plot(tempBit, xPixel2, yPixel2, rfpart(yEnd) * xGap);
+                            plot(tempBit, xPixel2, yPixel2 + 1, fpart(yEnd) * xGap);
+                        }
+
+                        if (steep)
+                        {
+                            for (int x = (int)(xPixel1 + 1); x <= xPixel2 - 1; x++)
+                            {
+                                plot(tempBit, ipart(intery), x, rfpart(intery));
+                                plot(tempBit, ipart(intery) + 1, x, fpart(intery));
+                                intery += gradient;
+                            }
+                        }
+                        else
+                        {
+                            for (int x = (int)(xPixel1 + 1); x <= xPixel2 - 1; x++)
+                            {
+                                plot(tempBit, x, ipart(intery), rfpart(intery));
+                                plot(tempBit, x, ipart(intery) + 1, fpart(intery));
+                                intery += gradient;
+                            }
+                        }
                     }
                     else
                     {
@@ -528,10 +964,10 @@ namespace CG3JTluczek
                             {
                                 continue;
                             }
-                            if (linPoly.thickness > 1)
+                            if (poly.thickness > 1)
                             {
 
-                                for (int i = 2; i <= linPoly.thickness; i++)
+                                for (int i = 2; i <= poly.thickness; i++)
                                 {
                                     try
                                     {
@@ -602,18 +1038,20 @@ namespace CG3JTluczek
             {
                 labelAliasing.Text = "ANTIALIASING OFF";
                 isAliasing = false;
+                redraw();
             }
             else
             {
                 labelAliasing.Text = "ANTIALIASING ON";
                 isAliasing = true;
+                redraw();
             }
         }
 
         private void buttonCol_Click(object sender, EventArgs e)
         {
             ColorDialog MyDialog = new ColorDialog();
-            MyDialog.AllowFullOpen = false;
+            MyDialog.AllowFullOpen = true;
             MyDialog.ShowHelp = true;
             MyDialog.Color = Tweakable.col;
 
@@ -622,6 +1060,85 @@ namespace CG3JTluczek
                 Tweakable.col = MyDialog.Color;
                 panel1.BackColor = Tweakable.col;
             }
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            Serializer ser = new Serializer();
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            RasterGraphicsWrapper ras = new RasterGraphicsWrapper(lines, circles, polygons);
+            saveDialog.InitialDirectory = "C:\\Documents";
+            saveDialog.Filter = "Raster graphics CG (*.minicg)|*.minicg";
+            saveDialog.DefaultExt = "dat";
+            saveDialog.AddExtension = true;
+            saveDialog.Title = "Save Raster Graphics";
+            saveDialog.ShowDialog();
+
+            if(saveDialog.FileName != "")
+            {
+                ser.Save(saveDialog.FileName, ras);
+            }
+        }
+
+        private void buttonLoad_Click(object sender, EventArgs e)
+        {
+            Serializer ser = new Serializer();
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.InitialDirectory = "C:\\Documents";
+            openDialog.Filter = "Raster graphics CG (*.minicg)|*.minicg";
+            openDialog.FilterIndex = 2;
+            openDialog.RestoreDirectory = true;
+            if(openDialog.ShowDialog() == DialogResult.OK)
+            {
+                lines.Clear();
+                circles.Clear();
+                polygons.Clear();
+                RasterGraphicsWrapper ras = ser.Load(openDialog.FileName);
+                lines = ras.lines;
+                circles = ras.circles;
+                polygons = ras.polygons;
+                redraw();
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        // XIAOLIN WU HELPER FUNCTIONS
+        // http://rosettacode.org/wiki/Xiaolin_Wu%27s_line_algorithm#C.23
+        private void plot(Bitmap bitmap, double x, double y, double c)
+        {
+            int alpha = (int)(c * 255);
+            if (alpha > 255) alpha = 255;
+            if (alpha < 0) alpha = 0;
+            Color color = Color.FromArgb(alpha, Tweakable.col);
+            try
+            {
+                bitmap.SetPixel((int)x, (int)y, color);
+            }catch(IndexOutOfRangeException e)
+            {
+                return;
+            }
+        }
+
+        int ipart(double x) { return (int)x; }
+
+        int round(double x) { return ipart(x + 0.5); }
+
+        double fpart(double x)
+        {
+            if (x < 0) return (1 - (x - Math.Floor(x)));
+            return (x - Math.Floor(x));
+        }
+
+        double rfpart(double x)
+        {
+            return 1 - fpart(x);
+        }
+        double D(int r, int y)
+        {
+            return Math.Ceiling(Math.Sqrt(r * r - y * y)) - Math.Sqrt(r * r - y * y);
         }
     }
 }

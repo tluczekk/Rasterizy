@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace CG3JTluczek
 {
-    class Line
+    [Serializable]
+    public class Line
     {
         public Point start;
         public Point end;

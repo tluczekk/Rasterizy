@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace CG3JTluczek
 {
-    class Circle
+    [Serializable]
+    public class Circle
     {
         public Point center;
         public int radius;

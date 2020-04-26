@@ -7,19 +7,22 @@ using System.Threading.Tasks;
 
 namespace CG3JTluczek
 {
-    class Polygon
+    [Serializable]
+    public class Polygon
     {
         public List<Point> polyVertices;
         public bool isComplete;
         public Point startVertex;
         public List<Line> vertexLines;
         public Color polyColor;
+        public int thickness;
         public Polygon() 
         {
             polyVertices = new List<Point>();
             isComplete = false;
             vertexLines = new List<Line>();
             polyColor = Tweakable.col;
+            thickness = Tweakable.thicc;
         }
         public List<Point> allPoints()
         {

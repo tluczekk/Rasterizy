@@ -43,6 +43,8 @@
             this.buttonAliasing = new System.Windows.Forms.Button();
             this.buttonCol = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.buttonSave = new System.Windows.Forms.Button();
+            this.buttonLoad = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
@@ -53,14 +55,14 @@
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Location = new System.Drawing.Point(12, 12);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(578, 426);
+            this.pictureBox1.Size = new System.Drawing.Size(955, 538);
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
             // 
             // buttonLine
             // 
-            this.buttonLine.Location = new System.Drawing.Point(596, 38);
+            this.buttonLine.Location = new System.Drawing.Point(983, 38);
             this.buttonLine.Name = "buttonLine";
             this.buttonLine.Size = new System.Drawing.Size(75, 23);
             this.buttonLine.TabIndex = 3;
@@ -70,9 +72,9 @@
             // 
             // buttonClear
             // 
-            this.buttonClear.Location = new System.Drawing.Point(665, 415);
+            this.buttonClear.Location = new System.Drawing.Point(983, 527);
             this.buttonClear.Name = "buttonClear";
-            this.buttonClear.Size = new System.Drawing.Size(75, 23);
+            this.buttonClear.Size = new System.Drawing.Size(181, 23);
             this.buttonClear.TabIndex = 4;
             this.buttonClear.Text = "Clear";
             this.buttonClear.UseVisualStyleBackColor = true;
@@ -85,14 +87,14 @@
             "Move",
             "Delete"});
             this.comboLine.FormattingEnabled = true;
-            this.comboLine.Location = new System.Drawing.Point(688, 40);
+            this.comboLine.Location = new System.Drawing.Point(1064, 40);
             this.comboLine.Name = "comboLine";
             this.comboLine.Size = new System.Drawing.Size(100, 21);
             this.comboLine.TabIndex = 5;
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(688, 136);
+            this.numericUpDown1.Location = new System.Drawing.Point(1064, 131);
             this.numericUpDown1.Minimum = new decimal(new int[] {
             1,
             0,
@@ -111,7 +113,7 @@
             // labelThicc
             // 
             this.labelThicc.AutoSize = true;
-            this.labelThicc.Location = new System.Drawing.Point(617, 138);
+            this.labelThicc.Location = new System.Drawing.Point(1002, 133);
             this.labelThicc.Name = "labelThicc";
             this.labelThicc.Size = new System.Drawing.Size(34, 13);
             this.labelThicc.TabIndex = 8;
@@ -119,7 +121,7 @@
             // 
             // buttonCircle
             // 
-            this.buttonCircle.Location = new System.Drawing.Point(596, 67);
+            this.buttonCircle.Location = new System.Drawing.Point(983, 67);
             this.buttonCircle.Name = "buttonCircle";
             this.buttonCircle.Size = new System.Drawing.Size(75, 23);
             this.buttonCircle.TabIndex = 9;
@@ -130,14 +132,14 @@
             // comboCircle
             // 
             this.comboCircle.FormattingEnabled = true;
-            this.comboCircle.Location = new System.Drawing.Point(688, 69);
+            this.comboCircle.Location = new System.Drawing.Point(1064, 69);
             this.comboCircle.Name = "comboCircle";
             this.comboCircle.Size = new System.Drawing.Size(100, 21);
             this.comboCircle.TabIndex = 10;
             // 
             // buttonPoly
             // 
-            this.buttonPoly.Location = new System.Drawing.Point(596, 96);
+            this.buttonPoly.Location = new System.Drawing.Point(983, 96);
             this.buttonPoly.Name = "buttonPoly";
             this.buttonPoly.Size = new System.Drawing.Size(75, 23);
             this.buttonPoly.TabIndex = 11;
@@ -148,7 +150,7 @@
             // comboPoly
             // 
             this.comboPoly.FormattingEnabled = true;
-            this.comboPoly.Location = new System.Drawing.Point(688, 98);
+            this.comboPoly.Location = new System.Drawing.Point(1064, 98);
             this.comboPoly.Name = "comboPoly";
             this.comboPoly.Size = new System.Drawing.Size(100, 21);
             this.comboPoly.TabIndex = 12;
@@ -156,7 +158,7 @@
             // labelInfo
             // 
             this.labelInfo.AutoSize = true;
-            this.labelInfo.Location = new System.Drawing.Point(650, 12);
+            this.labelInfo.Location = new System.Drawing.Point(1032, 12);
             this.labelInfo.Name = "labelInfo";
             this.labelInfo.Size = new System.Drawing.Size(0, 13);
             this.labelInfo.TabIndex = 13;
@@ -164,7 +166,7 @@
             // labelAliasing
             // 
             this.labelAliasing.AutoSize = true;
-            this.labelAliasing.Location = new System.Drawing.Point(650, 176);
+            this.labelAliasing.Location = new System.Drawing.Point(1020, 172);
             this.labelAliasing.Name = "labelAliasing";
             this.labelAliasing.Size = new System.Drawing.Size(104, 13);
             this.labelAliasing.TabIndex = 14;
@@ -172,7 +174,7 @@
             // 
             // buttonAliasing
             // 
-            this.buttonAliasing.Location = new System.Drawing.Point(653, 203);
+            this.buttonAliasing.Location = new System.Drawing.Point(1023, 188);
             this.buttonAliasing.Name = "buttonAliasing";
             this.buttonAliasing.Size = new System.Drawing.Size(101, 23);
             this.buttonAliasing.TabIndex = 15;
@@ -182,7 +184,7 @@
             // 
             // buttonCol
             // 
-            this.buttonCol.Location = new System.Drawing.Point(688, 243);
+            this.buttonCol.Location = new System.Drawing.Point(1058, 243);
             this.buttonCol.Name = "buttonCol";
             this.buttonCol.Size = new System.Drawing.Size(66, 23);
             this.buttonCol.TabIndex = 16;
@@ -193,16 +195,38 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.panel1.Location = new System.Drawing.Point(653, 243);
+            this.panel1.Location = new System.Drawing.Point(1023, 243);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(29, 23);
             this.panel1.TabIndex = 17;
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.Location = new System.Drawing.Point(983, 469);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(181, 23);
+            this.buttonSave.TabIndex = 18;
+            this.buttonSave.Text = "Save";
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
+            // 
+            // buttonLoad
+            // 
+            this.buttonLoad.Location = new System.Drawing.Point(983, 498);
+            this.buttonLoad.Name = "buttonLoad";
+            this.buttonLoad.Size = new System.Drawing.Size(181, 23);
+            this.buttonLoad.TabIndex = 19;
+            this.buttonLoad.Text = "Load";
+            this.buttonLoad.UseVisualStyleBackColor = true;
+            this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1184, 562);
+            this.Controls.Add(this.buttonLoad);
+            this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.buttonCol);
             this.Controls.Add(this.buttonAliasing);
@@ -218,8 +242,10 @@
             this.Controls.Add(this.buttonClear);
             this.Controls.Add(this.buttonLine);
             this.Controls.Add(this.pictureBox1);
+            this.MaximumSize = new System.Drawing.Size(1200, 600);
+            this.MinimumSize = new System.Drawing.Size(1200, 600);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Rasterizy";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
@@ -243,6 +269,8 @@
         private System.Windows.Forms.Button buttonAliasing;
         private System.Windows.Forms.Button buttonCol;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button buttonSave;
+        private System.Windows.Forms.Button buttonLoad;
     }
 }
 
