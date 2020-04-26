@@ -15,6 +15,10 @@ namespace CG3JTluczek
     {
         // Whole logic of the program is contained in Mouse_Down method
         // while logic of drawing in redraw()
+        // In mouse down, each if-block represents according mode
+        // In redraw, each foreach statement represents drawing of one set of shapes at a time
+        // Code can be found on my repository:
+        // https://github.com/tluczekk/Rasterizy/tree/master
         public Form1()
         {
             InitializeComponent();
@@ -45,6 +49,7 @@ namespace CG3JTluczek
         }
 
         // Global triggers and variables
+
         private bool isLineMode = false;
         private bool isCircleMode = false;
         private bool isPolygonMode = false;
@@ -71,6 +76,7 @@ namespace CG3JTluczek
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
+            // If either trigger is on, program operates on a given mode
             if (isLineMode)
             {
                 if (((KeyValuePair<string, string>)comboLine.SelectedItem).Value == "Draw")
@@ -451,10 +457,7 @@ namespace CG3JTluczek
                                                 + Math.Pow(pointToThicken.Y - p.Y, 2));
                             if (dist < 3)
                             {
-                                foreach (Line l in poly.vertexLines)
-                                {
-                                    l.thickness = Tweakable.thicc;
-                                }
+                                poly.thickness = Tweakable.thicc;
                                 redraw();
                                 break;
                             }
@@ -535,10 +538,12 @@ namespace CG3JTluczek
             {
                 tempBit = new Bitmap(pictureBox1.Image);
             }
+            // Drawing each set of shapes
             foreach (Line l in lines)
             {
                 if (isAliasing)
                 {
+                    // Xiaolin Wu algorithm
                     // http://rosettacode.org/wiki/Xiaolin_Wu%27s_line_algorithm#C.23
                     Point tempStart = l.start;
                     Point tempEnd = l.end;
@@ -567,13 +572,13 @@ namespace CG3JTluczek
 
                     if (steep)
                     {
-                        plot(tempBit, yPixel1, xPixel1, rfpart(yEnd) * xGap);
-                        plot(tempBit, yPixel1 + 1, xPixel1, fpart(yEnd) * xGap);
+                        plot(tempBit, yPixel1, xPixel1, rfpart(yEnd) * xGap, l.linCol);
+                        plot(tempBit, yPixel1 + 1, xPixel1, fpart(yEnd) * xGap, l.linCol);
                     }
                     else
                     {
-                        plot(tempBit, xPixel1, yPixel1, rfpart(yEnd) * xGap);
-                        plot(tempBit, xPixel1, yPixel1 + 1, fpart(yEnd) * xGap);
+                        plot(tempBit, xPixel1, yPixel1, rfpart(yEnd) * xGap,l.linCol);
+                        plot(tempBit, xPixel1, yPixel1 + 1, fpart(yEnd) * xGap, l.linCol);
                     }
                     double intery = yEnd + gradient;
 
@@ -584,21 +589,21 @@ namespace CG3JTluczek
                     double yPixel2 = ipart(yEnd);
                     if (steep)
                     {
-                        plot(tempBit, yPixel2, xPixel2, rfpart(yEnd) * xGap);
-                        plot(tempBit, yPixel2 + 1, xPixel2, fpart(yEnd) * xGap);
+                        plot(tempBit, yPixel2, xPixel2, rfpart(yEnd) * xGap, l.linCol);
+                        plot(tempBit, yPixel2 + 1, xPixel2, fpart(yEnd) * xGap, l.linCol);
                     }
                     else
                     {
-                        plot(tempBit, xPixel2, yPixel2, rfpart(yEnd) * xGap);
-                        plot(tempBit, xPixel2, yPixel2 + 1, fpart(yEnd) * xGap);
+                        plot(tempBit, xPixel2, yPixel2, rfpart(yEnd) * xGap, l.linCol);
+                        plot(tempBit, xPixel2, yPixel2 + 1, fpart(yEnd) * xGap, l.linCol);
                     }
 
                     if (steep)
                     {
                         for (int x = (int)(xPixel1 + 1); x <= xPixel2 - 1; x++)
                         {
-                            plot(tempBit, ipart(intery), x, rfpart(intery));
-                            plot(tempBit, ipart(intery) + 1, x, fpart(intery));
+                            plot(tempBit, ipart(intery), x, rfpart(intery), l.linCol);
+                            plot(tempBit, ipart(intery) + 1, x, fpart(intery), l.linCol);
                             intery += gradient;
                         }
                     }
@@ -606,8 +611,8 @@ namespace CG3JTluczek
                     {
                         for (int x = (int)(xPixel1 + 1); x <= xPixel2 - 1; x++)
                         {
-                            plot(tempBit, x, ipart(intery), rfpart(intery));
-                            plot(tempBit, x, ipart(intery) + 1, fpart(intery));
+                            plot(tempBit, x, ipart(intery), rfpart(intery), l.linCol);
+                            plot(tempBit, x, ipart(intery) + 1, fpart(intery), l.linCol);
                             intery += gradient;
                         }
                     }
@@ -907,13 +912,13 @@ namespace CG3JTluczek
 
                         if (steep)
                         {
-                            plot(tempBit, yPixel1, xPixel1, rfpart(yEnd) * xGap);
-                            plot(tempBit, yPixel1 + 1, xPixel1, fpart(yEnd) * xGap);
+                            plot(tempBit, yPixel1, xPixel1, rfpart(yEnd) * xGap, poly.polyColor);
+                            plot(tempBit, yPixel1 + 1, xPixel1, fpart(yEnd) * xGap, poly.polyColor);
                         }
                         else
                         {
-                            plot(tempBit, xPixel1, yPixel1, rfpart(yEnd) * xGap);
-                            plot(tempBit, xPixel1, yPixel1 + 1, fpart(yEnd) * xGap);
+                            plot(tempBit, xPixel1, yPixel1, rfpart(yEnd) * xGap, poly.polyColor);
+                            plot(tempBit, xPixel1, yPixel1 + 1, fpart(yEnd) * xGap, poly.polyColor);
                         }
                         double intery = yEnd + gradient;
 
@@ -924,21 +929,21 @@ namespace CG3JTluczek
                         double yPixel2 = ipart(yEnd);
                         if (steep)
                         {
-                            plot(tempBit, yPixel2, xPixel2, rfpart(yEnd) * xGap);
-                            plot(tempBit, yPixel2 + 1, xPixel2, fpart(yEnd) * xGap);
+                            plot(tempBit, yPixel2, xPixel2, rfpart(yEnd) * xGap, poly.polyColor);
+                            plot(tempBit, yPixel2 + 1, xPixel2, fpart(yEnd) * xGap, poly.polyColor);
                         }
                         else
                         {
-                            plot(tempBit, xPixel2, yPixel2, rfpart(yEnd) * xGap);
-                            plot(tempBit, xPixel2, yPixel2 + 1, fpart(yEnd) * xGap);
+                            plot(tempBit, xPixel2, yPixel2, rfpart(yEnd) * xGap, poly.polyColor);
+                            plot(tempBit, xPixel2, yPixel2 + 1, fpart(yEnd) * xGap, poly.polyColor);
                         }
 
                         if (steep)
                         {
                             for (int x = (int)(xPixel1 + 1); x <= xPixel2 - 1; x++)
                             {
-                                plot(tempBit, ipart(intery), x, rfpart(intery));
-                                plot(tempBit, ipart(intery) + 1, x, fpart(intery));
+                                plot(tempBit, ipart(intery), x, rfpart(intery), poly.polyColor);
+                                plot(tempBit, ipart(intery) + 1, x, fpart(intery), poly.polyColor);
                                 intery += gradient;
                             }
                         }
@@ -946,8 +951,8 @@ namespace CG3JTluczek
                         {
                             for (int x = (int)(xPixel1 + 1); x <= xPixel2 - 1; x++)
                             {
-                                plot(tempBit, x, ipart(intery), rfpart(intery));
-                                plot(tempBit, x, ipart(intery) + 1, fpart(intery));
+                                plot(tempBit, x, ipart(intery), rfpart(intery), poly.polyColor);
+                                plot(tempBit, x, ipart(intery) + 1, fpart(intery), poly.polyColor);
                                 intery += gradient;
                             }
                         }
@@ -1107,12 +1112,12 @@ namespace CG3JTluczek
 
         // XIAOLIN WU HELPER FUNCTIONS
         // http://rosettacode.org/wiki/Xiaolin_Wu%27s_line_algorithm#C.23
-        private void plot(Bitmap bitmap, double x, double y, double c)
+        private void plot(Bitmap bitmap, double x, double y, double c, Color baseCol)
         {
             int alpha = (int)(c * 255);
             if (alpha > 255) alpha = 255;
             if (alpha < 0) alpha = 0;
-            Color color = Color.FromArgb(alpha, Tweakable.col);
+            Color color = Color.FromArgb(alpha, baseCol);
             try
             {
                 bitmap.SetPixel((int)x, (int)y, color);
