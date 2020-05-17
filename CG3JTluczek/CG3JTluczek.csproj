@@ -44,8 +44,11 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AET.cs" />
+    <Compile Include="Capsule.cs" />
     <Compile Include="Circle.cs" />
     <Compile Include="ColoredPoint.cs" />
     <Compile Include="Form1.cs">
@@ -59,8 +62,11 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RasterGraphicsWrapper.cs" />
+    <Compile Include="Rectangle.cs" />
     <Compile Include="Serializer.cs" />
+    <Compile Include="SutherlandHodgman.cs" />
     <Compile Include="Tweakable.cs" />
+    <Compile Include="XiaolinWu.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

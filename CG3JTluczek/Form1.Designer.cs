@@ -45,6 +45,12 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.buttonSave = new System.Windows.Forms.Button();
             this.buttonLoad = new System.Windows.Forms.Button();
+            this.buttonCapsule = new System.Windows.Forms.Button();
+            this.comboCapsule = new System.Windows.Forms.ComboBox();
+            this.buttonRectangle = new System.Windows.Forms.Button();
+            this.comboRectangle = new System.Windows.Forms.ComboBox();
+            this.buttonFill = new System.Windows.Forms.Button();
+            this.buttonFillImg = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
@@ -94,7 +100,7 @@
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(1064, 131);
+            this.numericUpDown1.Location = new System.Drawing.Point(1064, 195);
             this.numericUpDown1.Minimum = new decimal(new int[] {
             1,
             0,
@@ -113,7 +119,7 @@
             // labelThicc
             // 
             this.labelThicc.AutoSize = true;
-            this.labelThicc.Location = new System.Drawing.Point(1002, 133);
+            this.labelThicc.Location = new System.Drawing.Point(998, 197);
             this.labelThicc.Name = "labelThicc";
             this.labelThicc.Size = new System.Drawing.Size(34, 13);
             this.labelThicc.TabIndex = 8;
@@ -166,7 +172,7 @@
             // labelAliasing
             // 
             this.labelAliasing.AutoSize = true;
-            this.labelAliasing.Location = new System.Drawing.Point(1020, 172);
+            this.labelAliasing.Location = new System.Drawing.Point(1020, 246);
             this.labelAliasing.Name = "labelAliasing";
             this.labelAliasing.Size = new System.Drawing.Size(104, 13);
             this.labelAliasing.TabIndex = 14;
@@ -174,7 +180,7 @@
             // 
             // buttonAliasing
             // 
-            this.buttonAliasing.Location = new System.Drawing.Point(1023, 188);
+            this.buttonAliasing.Location = new System.Drawing.Point(1023, 262);
             this.buttonAliasing.Name = "buttonAliasing";
             this.buttonAliasing.Size = new System.Drawing.Size(101, 23);
             this.buttonAliasing.TabIndex = 15;
@@ -184,7 +190,7 @@
             // 
             // buttonCol
             // 
-            this.buttonCol.Location = new System.Drawing.Point(1058, 243);
+            this.buttonCol.Location = new System.Drawing.Point(1058, 291);
             this.buttonCol.Name = "buttonCol";
             this.buttonCol.Size = new System.Drawing.Size(66, 23);
             this.buttonCol.TabIndex = 16;
@@ -195,7 +201,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.panel1.Location = new System.Drawing.Point(1023, 243);
+            this.panel1.Location = new System.Drawing.Point(1023, 291);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(29, 23);
             this.panel1.TabIndex = 17;
@@ -220,11 +226,73 @@
             this.buttonLoad.UseVisualStyleBackColor = true;
             this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
             // 
+            // buttonCapsule
+            // 
+            this.buttonCapsule.Location = new System.Drawing.Point(983, 125);
+            this.buttonCapsule.Name = "buttonCapsule";
+            this.buttonCapsule.Size = new System.Drawing.Size(75, 23);
+            this.buttonCapsule.TabIndex = 20;
+            this.buttonCapsule.Text = "Capsule";
+            this.buttonCapsule.UseVisualStyleBackColor = true;
+            this.buttonCapsule.Click += new System.EventHandler(this.buttonCapsule_Click);
+            // 
+            // comboCapsule
+            // 
+            this.comboCapsule.FormattingEnabled = true;
+            this.comboCapsule.Location = new System.Drawing.Point(1064, 127);
+            this.comboCapsule.Name = "comboCapsule";
+            this.comboCapsule.Size = new System.Drawing.Size(100, 21);
+            this.comboCapsule.TabIndex = 21;
+            // 
+            // buttonRectangle
+            // 
+            this.buttonRectangle.Location = new System.Drawing.Point(983, 154);
+            this.buttonRectangle.Name = "buttonRectangle";
+            this.buttonRectangle.Size = new System.Drawing.Size(75, 23);
+            this.buttonRectangle.TabIndex = 22;
+            this.buttonRectangle.Text = "Rectangle";
+            this.buttonRectangle.UseVisualStyleBackColor = true;
+            this.buttonRectangle.Click += new System.EventHandler(this.buttonRectangle_Click);
+            // 
+            // comboRectangle
+            // 
+            this.comboRectangle.FormattingEnabled = true;
+            this.comboRectangle.Location = new System.Drawing.Point(1064, 156);
+            this.comboRectangle.Name = "comboRectangle";
+            this.comboRectangle.Size = new System.Drawing.Size(100, 21);
+            this.comboRectangle.TabIndex = 23;
+            // 
+            // buttonFill
+            // 
+            this.buttonFill.Location = new System.Drawing.Point(1023, 320);
+            this.buttonFill.Name = "buttonFill";
+            this.buttonFill.Size = new System.Drawing.Size(101, 23);
+            this.buttonFill.TabIndex = 25;
+            this.buttonFill.Text = "Fill poly";
+            this.buttonFill.UseVisualStyleBackColor = true;
+            this.buttonFill.Click += new System.EventHandler(this.buttonFill_Click);
+            // 
+            // buttonFillImg
+            // 
+            this.buttonFillImg.Location = new System.Drawing.Point(983, 437);
+            this.buttonFillImg.Name = "buttonFillImg";
+            this.buttonFillImg.Size = new System.Drawing.Size(181, 26);
+            this.buttonFillImg.TabIndex = 26;
+            this.buttonFillImg.Text = "Fill with Image";
+            this.buttonFillImg.UseVisualStyleBackColor = true;
+            this.buttonFillImg.Click += new System.EventHandler(this.buttonFillImg_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1184, 562);
+            this.Controls.Add(this.buttonFillImg);
+            this.Controls.Add(this.buttonFill);
+            this.Controls.Add(this.comboRectangle);
+            this.Controls.Add(this.buttonRectangle);
+            this.Controls.Add(this.comboCapsule);
+            this.Controls.Add(this.buttonCapsule);
             this.Controls.Add(this.buttonLoad);
             this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.panel1);
@@ -271,6 +339,12 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.Button buttonLoad;
+        private System.Windows.Forms.Button buttonCapsule;
+        private System.Windows.Forms.ComboBox comboCapsule;
+        private System.Windows.Forms.Button buttonRectangle;
+        private System.Windows.Forms.ComboBox comboRectangle;
+        private System.Windows.Forms.Button buttonFill;
+        private System.Windows.Forms.Button buttonFillImg;
     }
 }
 
