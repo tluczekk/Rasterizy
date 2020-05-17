@@ -64,3 +64,5 @@ One ought to click **Fill with Image** button, which will open a file dialog to 
 User can save and load contents of the picturebox to and from a **.minicg** file using **Save** and **Load** dialogs.
 ### Clearing the picturebox
 To clear a picturebox, one has to click **Clear** button which will remove all the shapes and information associated with them 
+
+##### Jakub Tłuczek 2020
