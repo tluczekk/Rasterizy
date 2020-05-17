@@ -12,12 +12,17 @@ namespace CG3JTluczek
         public List<Line> lines;
         public List<Circle> circles;
         public List<Polygon> polygons;
+        public List<Capsule> capsules;
+        public List<Rectangle> rectangles;
         public RasterGraphicsWrapper() { }
-        public RasterGraphicsWrapper(List<Line> l, List<Circle> c, List<Polygon> p)
+        public RasterGraphicsWrapper(List<Line> l, List<Circle> c, List<Polygon> p, List<Capsule> caps,
+                                    List<Rectangle> rect)
         {
             lines = new List<Line>(l);
             circles = new List<Circle>(c);
             polygons = new List<Polygon>(p);
+            capsules = new List<Capsule>(caps);
+            rectangles = new List<Rectangle>(rect);
         }
     }
 }
