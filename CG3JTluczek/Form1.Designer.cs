@@ -51,6 +51,8 @@
             this.comboRectangle = new System.Windows.Forms.ComboBox();
             this.buttonFill = new System.Windows.Forms.Button();
             this.buttonFillImg = new System.Windows.Forms.Button();
+            this.buttonManual = new System.Windows.Forms.Button();
+            this.buttonFloodFill = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
@@ -78,7 +80,7 @@
             // 
             // buttonClear
             // 
-            this.buttonClear.Location = new System.Drawing.Point(983, 527);
+            this.buttonClear.Location = new System.Drawing.Point(983, 440);
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(181, 23);
             this.buttonClear.TabIndex = 4;
@@ -274,7 +276,7 @@
             // 
             // buttonFillImg
             // 
-            this.buttonFillImg.Location = new System.Drawing.Point(983, 437);
+            this.buttonFillImg.Location = new System.Drawing.Point(983, 408);
             this.buttonFillImg.Name = "buttonFillImg";
             this.buttonFillImg.Size = new System.Drawing.Size(181, 26);
             this.buttonFillImg.TabIndex = 26;
@@ -282,11 +284,33 @@
             this.buttonFillImg.UseVisualStyleBackColor = true;
             this.buttonFillImg.Click += new System.EventHandler(this.buttonFillImg_Click);
             // 
+            // buttonManual
+            // 
+            this.buttonManual.Location = new System.Drawing.Point(983, 527);
+            this.buttonManual.Name = "buttonManual";
+            this.buttonManual.Size = new System.Drawing.Size(181, 23);
+            this.buttonManual.TabIndex = 27;
+            this.buttonManual.Text = "Manual on Github";
+            this.buttonManual.UseVisualStyleBackColor = true;
+            this.buttonManual.Click += new System.EventHandler(this.buttonManual_Click);
+            // 
+            // buttonFloodFill
+            // 
+            this.buttonFloodFill.Location = new System.Drawing.Point(983, 379);
+            this.buttonFloodFill.Name = "buttonFloodFill";
+            this.buttonFloodFill.Size = new System.Drawing.Size(181, 23);
+            this.buttonFloodFill.TabIndex = 28;
+            this.buttonFloodFill.Text = "Flood fill";
+            this.buttonFloodFill.UseVisualStyleBackColor = true;
+            this.buttonFloodFill.Click += new System.EventHandler(this.buttonFloodFill_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1184, 562);
+            this.Controls.Add(this.buttonFloodFill);
+            this.Controls.Add(this.buttonManual);
             this.Controls.Add(this.buttonFillImg);
             this.Controls.Add(this.buttonFill);
             this.Controls.Add(this.comboRectangle);
@@ -345,6 +369,8 @@
         private System.Windows.Forms.ComboBox comboRectangle;
         private System.Windows.Forms.Button buttonFill;
         private System.Windows.Forms.Button buttonFillImg;
+        private System.Windows.Forms.Button buttonManual;
+        private System.Windows.Forms.Button buttonFloodFill;
     }
 }
 
