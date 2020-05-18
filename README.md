@@ -60,6 +60,8 @@ To fill a **Polygon**, one has to select one of two options (both use **Active E
 User has to click **Fill poly** button, and then select a polygon to fill with a colour selected in a **Color** dialog
 #### Filling with an image
 One ought to click **Fill with Image** button, which will open a file dialog to choose an image from disk. Then, user has to select a **Polygon** to fill with the chosen image.
+#### Flood filling
+To flood fill, user should select a point in the picturebox that's going to be a starting point for **non-recursive** flood fill algorithm. Then. algorithm will fill the image with a selected colour from the **Color** dialog, until it reaches some boundary. Bear in mind, that this filling, when performed inside a shape, isn't tied to it, as it is the case with two previous filling algorithms.
 ### Saving and Loading
 User can save and load contents of the picturebox to and from a **.minicg** file using **Save** and **Load** dialogs.
 ### Clearing the picturebox
