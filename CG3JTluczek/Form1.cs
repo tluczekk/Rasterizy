@@ -65,6 +65,7 @@ namespace CG3JTluczek
         private bool isRectangleMode = false;
         private bool isFillPolyMode = false;
         private bool isFillImgMode = false;
+        private bool isFloodFillMode = false;
 
         private int lineCount = 0;
         private int circleCount = 0;
@@ -89,6 +90,7 @@ namespace CG3JTluczek
         private List<Polygon> polygons = new List<Polygon>();
         private List<Capsule> capsules = new List<Capsule>();
         private List<Rectangle> rectangles = new List<Rectangle>();
+        private List<Filler> fillers = new List<Filler>();
 
         private Line lineToMove;
         private Circle circleToMove;
@@ -133,6 +135,10 @@ namespace CG3JTluczek
             else if (isFillImgMode)
             {
                 detectFillPoly(sender, e);
+            }
+            else if (isFloodFillMode)
+            {
+                detectFillFlood(sender, e);
             }
         }
 
@@ -940,6 +946,14 @@ namespace CG3JTluczek
                     }
                 }
             }
+        }
+
+        private void detectFillFlood(object sender, MouseEventArgs e)
+        {
+            Point startFiller = new Point(e.X, e.Y);
+            Filler tmp = new Filler(startFiller, Tweakable.col);
+            fillers.Add(tmp);
+            redraw();
         }
         #endregion
 
@@ -1925,7 +1939,42 @@ namespace CG3JTluczek
                     }
                 }
             }
+            foreach(Filler f in fillers)
+            {
+                tempBit = floodFill(tempBit, f.startPoint, f.fillColor);
+            }
             pictureBox1.Image = tempBit;
+        }
+
+        public Bitmap floodFill(Bitmap bit, Point p, Color col)
+        {
+            if(p.Y < 0 || p.Y > bit.Height - 1 || p.X < 0 || p.X > bit.Width - 1)
+            {
+                throw new Exception("Point not inside bitmap");
+            }
+            Bitmap filling = new Bitmap(bit);
+            Color seed = filling.GetPixel(p.X, p.Y);
+            Stack<Point> pointsStack = new Stack<Point>();
+            pointsStack.Push(p);
+            while(pointsStack.Count > 0)
+            {
+                Point r = pointsStack.Pop();
+                if (r.Y < 0 || r.Y > bit.Height - 1 || r.X < 0 || r.X > bit.Width - 1)
+                {
+                    continue;
+                }
+                Color pixCol = filling.GetPixel(r.X, r.Y);
+                if (pixCol == seed)
+                {
+                    filling.SetPixel(r.X, r.Y, col);
+                    pointsStack.Push(new Point(r.X + 1, r.Y));
+                    pointsStack.Push(new Point(r.X - 1, r.Y));
+                    pointsStack.Push(new Point(r.X, r.Y + 1));
+                    pointsStack.Push(new Point(r.X, r.Y - 1));
+                }
+            }
+            return filling;
+
         }
 
 
@@ -1942,6 +1991,7 @@ namespace CG3JTluczek
             isFillPolyMode = false;
             isFillImgMode = false;
             isRectangleMode = false;
+            isFloodFillMode = false;
             labelInfo.Text = "LINE   MODE";
         }
 
@@ -1952,6 +2002,7 @@ namespace CG3JTluczek
             polygons.Clear();
             capsules.Clear();
             rectangles.Clear();
+            fillers.Clear();
             pictureBox1.Image = backup;
         }
 
@@ -1969,6 +2020,7 @@ namespace CG3JTluczek
             isRectangleMode = false;
             isFillPolyMode = false;
             isFillImgMode = false;
+            isFloodFillMode = false;
             labelInfo.Text = "CIRCLE MODE";
         }
 
@@ -1981,6 +2033,7 @@ namespace CG3JTluczek
             isRectangleMode = false;
             isFillPolyMode = false;
             isFillImgMode = false;
+            isFloodFillMode = false;
             labelInfo.Text = "POLY MODE";
         }
 
@@ -2018,7 +2071,7 @@ namespace CG3JTluczek
         {
             Serializer ser = new Serializer();
             SaveFileDialog saveDialog = new SaveFileDialog();
-            RasterGraphicsWrapper ras = new RasterGraphicsWrapper(lines, circles, polygons, capsules, rectangles);
+            RasterGraphicsWrapper ras = new RasterGraphicsWrapper(lines, circles, polygons, capsules, rectangles, fillers);
             saveDialog.InitialDirectory = "C:\\Documents";
             saveDialog.Filter = "Raster graphics CG (*.minicg)|*.minicg";
             saveDialog.DefaultExt = "dat";
@@ -2047,12 +2100,14 @@ namespace CG3JTluczek
                 polygons.Clear();
                 capsules.Clear();
                 rectangles.Clear();
+                fillers.Clear();
                 RasterGraphicsWrapper ras = ser.Load(openDialog.FileName);
                 lines = ras.lines;
                 circles = ras.circles;
                 polygons = ras.polygons;
                 capsules = ras.capsules;
                 rectangles = ras.rectangles;
+                fillers = ras.fillers;
                 redraw();
             }
             else
@@ -2070,6 +2125,7 @@ namespace CG3JTluczek
             isCapsuleMode = true;
             isFillPolyMode = false;
             isFillImgMode = false;
+            isFloodFillMode = false;
             labelInfo.Text = "CAPSULE MODE";
         }
 
@@ -2082,6 +2138,7 @@ namespace CG3JTluczek
             isRectangleMode = true;
             isFillPolyMode = false;
             isFillImgMode = false;
+            isFloodFillMode = false;
             labelInfo.Text = "RECT MODE";
         }
 
@@ -2094,6 +2151,7 @@ namespace CG3JTluczek
             isCapsuleMode = false;
             isRectangleMode = false;
             isFillPolyMode = true;
+            isFloodFillMode = false;
             labelInfo.Text = "FILL MODE";
         }
 
@@ -2106,6 +2164,7 @@ namespace CG3JTluczek
             isRectangleMode = false;
             isFillPolyMode = false;
             isFillImgMode = true;
+            isFloodFillMode = false;
             labelInfo.Text = "POLY MODE";
             openFile();
 
@@ -2118,6 +2177,25 @@ namespace CG3JTluczek
             {
                 bitToFill = new Bitmap(open.FileName);
             }
+        }
+        
+
+        private void buttonManual_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/tluczekk/Rasterizy/blob/master/README.md");
+        }
+
+        private void buttonFloodFill_Click(object sender, EventArgs e)
+        {
+            isPolygonMode = false;
+            isCircleMode = false;
+            isLineMode = false;
+            isFillImgMode = false;
+            isCapsuleMode = false;
+            isRectangleMode = false;
+            isFillPolyMode = false;
+            isFloodFillMode = true;
+            labelInfo.Text = "FILL MODE";
         }
         #endregion
     }
